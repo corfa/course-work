@@ -14,6 +14,8 @@ services:
 
   broker:
       build: ./rabbit/
+      env_file:
+      - ./rabbit/.env
       restart: always
       ports:
         - "15672:15672"
@@ -28,19 +30,28 @@ services:
     ports:
       - 8888:8888
   
-
-  smtp:
-    build: ./smtp/
+  bis_log_app:
+    build: ./bis-log-backend/
     depends_on:
+      - database
       - broker
     restart: always
+    ports:
+      - 8000:8000
+  
+
+  # smtp:
+  #   build: ./smtp/
+  #   depends_on:
+  #     - broker
+  #   restart: always
 
   minio:
-    image: minio/minio:latest
-    command: server --console-address ":9001" /data
+    build: ./minio/
+    env_file:
+      - ./minio/.env
+    restart: always
     ports:
       - 9000:9000
       - 9001:9001
-    environment:
-      MINIO_ROOT_USER: "minioadmin"
-      MINIO_ROOT_PASSWORD: "minioadmin"
+    

@@ -29,7 +29,7 @@ channel = connection.channel()
 channel.queue_declare(queue='file')
 def callback(ch, method, properties, body):
         message_dict = json.loads(body.decode('utf-8'))
-        patch_s3, id_row = message_dict['patch_s3'], message_dict['id_row']
+        patch_s3, id_row = message_dict['patch_s3'], message_dict['row_id']
         get_count_words_from_s3_file(patch_s3,id_row)
    
 

@@ -18,7 +18,7 @@ def get_all_users_files(db: Session, owner_id: int) -> dict:
     result = []
     for row in files:
         file_name = row[1].split("/")[1]
-        curent_result = {"id":row[0],"file_name":file_name,"owner_id":row[2]}
+        curent_result = {"id":row[0],"file_name":file_name,"owner_id":row[2],"count_words":row[3]}
         result.append(curent_result)
     return result
 
@@ -35,3 +35,11 @@ def get_username(db: Session, user_id: int)-> str:
     result = db.execute(text(sql_query), params)
     username = result.fetchone()[0]
     return username
+
+
+def update_count_words(db: Session, row_id: int, count_words):
+    sql_query = "UPDATE files SET count_words = :count_words WHERE id = :row_id"
+    params = {"count_words": count_words, "row_id": row_id}
+    result = db.execute(text(sql_query), params)
+    db.commit()
+    return True if result is not None else False

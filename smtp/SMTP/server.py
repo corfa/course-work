@@ -25,7 +25,7 @@ def send_email_verification(recipient: str, token: str):
     msg = MIMEMultipart()
     msg['From'] = SMTPConfig.login
     msg['To'] = recipient
-    url = os.getenv('URL_USER_HOST', '')
+    url ="http://"+os.getenv('URL_USER_HOST', '')
     url += f"/email/verification/?token={token}&email={recipient}"
     html = f"""
     <html>

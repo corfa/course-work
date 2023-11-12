@@ -11,7 +11,6 @@ services:
     volumes:
       - ./database/create_table.sql:/docker-entrypoint-initdb.d/create_table.sql
 
-
   broker:
       build: ./rabbit/
       env_file:
@@ -35,16 +34,17 @@ services:
     depends_on:
       - database
       - broker
+      - minio
     restart: always
     ports:
       - 8000:8000
   
 
-  # smtp:
-  #   build: ./smtp/
-  #   depends_on:
-  #     - broker
-  #   restart: always
+  smtp:
+    build: ./smtp/
+    depends_on:
+      - broker
+    restart: always
 
   minio:
     build: ./minio/
@@ -55,3 +55,10 @@ services:
       - 9000:9000
       - 9001:9001
     
+  count-words-service:
+    build: ./count-words-service/
+    depends_on:
+      - minio
+      - broker
+    restart: always
+

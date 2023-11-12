@@ -14,8 +14,6 @@ rabbit_user = os.getenv('RABBIT_USERNAME','')
 rabbit_password = os.getenv('RABBIT_PASSWORD','')
 
 
-
-
 credentials = pika.PlainCredentials(rabbit_user, rabbit_password)
 
 connection_params = pika.ConnectionParameters(rabbit_host, rabbit_port, credentials=credentials) 

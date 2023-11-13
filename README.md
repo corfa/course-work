@@ -12,6 +12,6 @@
 - 80:/get/all/files
 - 80:/get/file/{file-name}
 ## Running the Service
-1) Install all the required dependencies: ``` docker-copose up -d ```
+1) Install all the required dependencies: ``` docker-compose up -d ```
 2) create bucket ``` file-client ```  
 

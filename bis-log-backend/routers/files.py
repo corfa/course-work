@@ -10,7 +10,7 @@ import tempfile
 import os
 
 from routers.depends import get_db, verification, get_minio_client, get_broker
-from db.requests.files_req import create_file_row, get_all_users_files,get_username, update_count_words
+from db.requests.files_req import create_file_row, get_all_users_files,get_username, update_file_status
 
 import os
 from dotenv import load_dotenv
@@ -53,7 +53,7 @@ async def get_file(file_name: str,db=Depends(get_db),minio_client=Depends(get_mi
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
-    
+
 @router.get("/get/all/files")
 async def get_file(db: Session = Depends(get_db), token: dict = Depends(verification)):
     try:
@@ -61,16 +61,16 @@ async def get_file(db: Session = Depends(get_db), token: dict = Depends(verifica
         return JSONResponse(content={"all_files": files})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-    
-    
-@router.patch("/update/count/words/{file_id}")
+
+
+
+@router.patch("/update/file/status/{file_id}")
 async def get_file(file_id: int, request_data: dict, db: Session = Depends(get_db)):
     try:
-        if "count_words" in request_data:
-            count_words = request_data["count_words"]
-            status = update_count_words(db, file_id, count_words)
+        if "status" in request_data:
+            status_file = request_data["status_file"]
+            status = update_file_status(db, file_id, status_file)
         return JSONResponse(content={"status": status})
     except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
-
+        return JSONResponse(content={"error": str(e)}, status_code=400)
 

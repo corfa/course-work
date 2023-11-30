@@ -55,8 +55,8 @@ services:
       - 9000:9000
       - 9001:9001
     
-  count-words-service:
-    build: ./count-words-service/
+  ofp-pipeline-service:
+    build: ./ofp-pipeline-service/
     depends_on:
       - minio
       - broker

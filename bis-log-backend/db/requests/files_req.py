@@ -3,7 +3,7 @@ from sqlalchemy.sql import text
 
 
 def create_file_row(db: Session, filename: str, owner_id: int) -> int:
-    sql_query = "INSERT INTO files (filename,owner_id) VALUES (:filename, :owner_id) RETURNING id"
+    sql_query = "INSERT INTO files (filename, owner_id, file_status) VALUES (:filename, :owner_id, 'upload') RETURNING id"
     params = {"filename": filename, "owner_id": owner_id}
     result = db.execute(text(sql_query), params)
     created_id = result.scalar()
@@ -29,7 +29,8 @@ def check_owner_file(db: Session, filename: str, owner_id: int) -> bool:
     result = db.execute(text(sql_query), params)
     return True if result.scalar() > 0 else False
 
-def get_username(db: Session, user_id: int)-> str:
+
+def get_username(db: Session, user_id: int) -> str:
     sql_query = "SELECT username FROM users WHERE id = :user_id"
     params = {"user_id": user_id}
     result = db.execute(text(sql_query), params)
@@ -37,9 +38,9 @@ def get_username(db: Session, user_id: int)-> str:
     return username
 
 
-def update_count_words(db: Session, row_id: int, count_words):
-    sql_query = "UPDATE files SET count_words = :count_words WHERE id = :row_id"
-    params = {"count_words": count_words, "row_id": row_id}
+def update_file_status(db: Session, row_id: int, status: str):
+    sql_query = "UPDATE files SET file_status = :status WHERE id = :row_id"
+    params = {"status": status, "row_id": row_id}
     result = db.execute(text(sql_query), params)
     db.commit()
     return True if result is not None else False

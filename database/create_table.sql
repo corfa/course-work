@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS files (
     id SERIAL PRIMARY KEY,
     filename VARCHAR(255),
     owner_id INTEGER REFERENCES users(id),
-    count_words INTEGER,
+    file_status text,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     update_at TIMESTAMPTZ DEFAULT NOW()
 );

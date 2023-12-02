@@ -16,7 +16,7 @@ connection_params = pika.ConnectionParameters(
     host=host,
     port=port,
     credentials=credentials,
-    heartbeat=1200  
+    heartbeat=12000
 )
 
 

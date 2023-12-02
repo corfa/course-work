@@ -11,7 +11,7 @@ def send_success(id_row: int):
     url = "http://"
     url += os.getenv('PATCH_URL_APP', '')
     url += str(id_row)
-    data = {'status': 'done'}  
+    data = {'status_file': 'Done'}
     requests.patch(url, json=data)
 
 

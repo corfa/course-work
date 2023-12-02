@@ -4,7 +4,8 @@ from pika.adapters.blocking_connection import BlockingChannel
 from fastapi import UploadFile
 from broker.actions import put_in_queue
 
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse
+from fastapi.responses import StreamingResponse
 
 import tempfile
 import os
@@ -48,8 +49,11 @@ async def get_file(file_name: str,db=Depends(get_db),minio_client=Depends(get_mi
     try:
         username = get_username(db, token["id"])
         object_name = f"{username}/{file_name}"
-        presigned_url = minio_client.presigned_get_object(bucket_name, object_name)
-        return RedirectResponse(url=presigned_url)
+        file_data = minio_client.get_object(bucket_name, object_name).data
+        return StreamingResponse(content=iter([file_data]), media_type="image/tiff", headers={"Content-Disposition": f"attachment; filename={file_name}"})
+
+
+
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
@@ -67,10 +71,9 @@ async def get_file(db: Session = Depends(get_db), token: dict = Depends(verifica
 @router.patch("/update/file/status/{file_id}")
 async def get_file(file_id: int, request_data: dict, db: Session = Depends(get_db)):
     try:
-        if "status" in request_data:
+        if "status_file" in request_data:
             status_file = request_data["status_file"]
-            status = update_file_status(db, file_id, status_file)
-        return JSONResponse(content={"status": status})
+            status_res = update_file_status(db, file_id, status_file)
+            return JSONResponse(content={"status": status_res})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=400)
-

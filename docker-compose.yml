@@ -26,9 +26,7 @@ services:
       - database
       - broker
     restart: always
-    ports:
-      - 6666:8888
-  
+
   bis_log_app:
     build: ./bis-log-backend/
     depends_on:
@@ -36,8 +34,6 @@ services:
       - broker
       - minio
     restart: always
-    ports:
-      - 6667:8000
   
 
   smtp:
@@ -64,9 +60,12 @@ services:
 
   nginx:
     build: ./nginx/
+    command: ["wait-for-it", "app:8888", "--", "wait-for-it", "bis_log_app:8000", "--", "nginx", "-g", "daemon off;"]
     depends_on:
       - app
       - bis_log_app
+      - broker
+
     restart: always
     ports:
       - "80:80"

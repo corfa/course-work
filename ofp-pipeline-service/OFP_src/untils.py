@@ -1,6 +1,7 @@
 from typing import Dict, Tuple, List
 
-from osgeo import gdal
+from osgeo import gdal, gdal_array
+
 import numpy as np
 
 

@@ -10,6 +10,7 @@ def create_file_row(db: Session, filename: str, owner_id: int) -> int:
     db.commit()
     return created_id
 
+
 def get_all_users_files(db: Session, owner_id: int) -> dict:
     sql_query = "SELECT * FROM files WHERE owner_id = :owner_id"
     params = {"owner_id": owner_id}
@@ -18,7 +19,8 @@ def get_all_users_files(db: Session, owner_id: int) -> dict:
     result = []
     for row in files:
         file_name = row[1].split("/")[1]
-        curent_result = {"id":row[0],"file_name":file_name,"owner_id":row[2],"count_words":row[3]}
+        curent_result = {"id": row[0], "file_name": file_name,
+                         "owner_id": row[2], "file_status": row[3]}
         result.append(curent_result)
     return result
 

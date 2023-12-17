@@ -12,7 +12,7 @@ from db.requests.user_requests import create_user, get_user_on_login
 from helper import read_token, verify_password, generate_confirmation_token
 from routers.depends import get_db, verification, get_broker
 
-from shemas.user import User
+from shemas.user import User, UserAuth
 
 router = APIRouter()
 
@@ -34,7 +34,7 @@ async def create_user_endpoint(user: User, db: Session = Depends(get_db),
 
 
 @router.post("/user/auth", tags=["users"])
-async def auth_user_endpoint(user: User, db: Session = Depends(get_db)):
+async def auth_user_endpoint(user: UserAuth, db: Session = Depends(get_db)):
     try:
         user_db = get_user_on_login(db, user.username)
         verify_password(user.password, user_db.password)
@@ -44,7 +44,7 @@ async def auth_user_endpoint(user: User, db: Session = Depends(get_db)):
                 detail="Email not confirmed"
             )
         token = helper.create_token({"id": user_db.id})
-        return {"X-token": token}
+        return {"token": token}
     except:
         return HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
